@@ -90,7 +90,7 @@ class hmc5883l:
                "Declination: " + self.degrees(self.declination()) + "\n" \
                "Heading: " + self.degrees(self.heading()) + "\n"
 
-if __name__ == "__main__":
+def go(gauss, declination, output_file, poll_interval_seconds, timestamp_format):
     # http://magnetic-declination.com/Great%20Britain%20(UK)/Harrogate#
     compass = hmc5883l(gauss = 4.7, declination = (-2,5))
     compass_file = open('/var/log/spaceteam/compass-log', 'w')

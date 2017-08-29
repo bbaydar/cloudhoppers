@@ -9,7 +9,7 @@ import time
 #
 # For the Beaglebone Black the library will assume bus 1 by default, which is
 # exposed with SCL = P9_19 and SDA = P9_20.
-sensor = BMP085.BMP085()
+#sensor = BMP085.BMP085()
 
 # Optionally you can override the bus number:
 #sensor = BMP085.BMP085(busnum=2)
@@ -20,14 +20,24 @@ sensor = BMP085.BMP085()
 # consumption are primarily the differences).  The default mode is STANDARD.
 #sensor = BMP085.BMP085(mode=BMP085.BMP085_ULTRAHIGHRES)
 
-temp_pressure_file = open('/var/log/spaceteam/temp-pressure-log', 'w')
+""" Fetch temperature and pressure data, and log it to file """
 
-while True:
+output_file = '/var/log/spaceteam/temp-pressure-log'
+timestamp_format = '%Y-%m-%d-%H-%M-%S'
+poll_interval_seconds = 10
 
-	temperature = '{0:0.2f} *C, '.format(sensor.read_temperature())
-	pressure = '{0:0.2f} Pa, '.format(sensor.read_pressure())
-	altitude = '{0:0.2f} m, '.format(sensor.read_altitude())
-	sealevel = '{0:0.2f} Pa, '.format(sensor.read_sealevel_pressure())
-	#print(temperature + pressure + altitude + sealevel)
-	temp_pressure_file.write(temperature + pressure + altitude + sealevel + "\n")
-	time.sleep(10)
+sensor = BMP085.BMP085()
+
+with open(output_file, 'w') as temp_pressure_file:
+    while True:
+        print(
+            '{}: {0:0.2f} m, {0:0.2f} *C, {0:0.2f} Pa, {0:0.2f} Pa (sea level)'.format(
+                time.strftime(timestamp_format),
+                sensor.read_altitude(),
+                sensor.read_temperature(),
+                sensor.read_pressure(),
+                sensor.read_sealevel_pressure()
+            ),
+            file=temp_pressure_file
+        )
+        time.sleep(poll_interval_seconds)

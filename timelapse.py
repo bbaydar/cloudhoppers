@@ -1,12 +1,16 @@
 from time import sleep
 from picamera import PiCamera
-from datetime import datetime, timedelta
+
+""" Snap periodic pictures """
+
+filename_template = './pics/img{timestamp:%Y-%m-%d-%H-%M-%S}.jpg'
+camera_interval_seconds = 5
 
 camera = PiCamera()
 camera.resolution = (3280, 2464)
 camera.start_preview()
 
-sleep(2)
-for filename in camera.capture_continuous('./pics/img{timestamp:%Y-%m-%d-%H-%M-%S}.jpg'):
+sleep(2) # give the camera a moment to set its light levels
+for filename in camera.capture_continuous(filename_template):
     print('Captured %s' % filename)
-    sleep(5)
+    sleep(camera_interval_seconds)
