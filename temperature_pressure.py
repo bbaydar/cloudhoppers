@@ -22,22 +22,20 @@ import time
 
 """ Fetch temperature and pressure data, and log it to file """
 
-output_file = '/var/log/spaceteam/temp-pressure-log'
-timestamp_format = '%Y-%m-%d-%H-%M-%S'
-poll_interval_seconds = 10
+def go(output_file, timestamp_format, poll_interval_seconds):
+    sensor = BMP085.BMP085()
 
-sensor = BMP085.BMP085()
-
-with open(output_file, 'w') as temp_pressure_file:
-    while True:
-        print(
-            '{}: {0:0.2f} m, {0:0.2f} *C, {0:0.2f} Pa, {0:0.2f} Pa (sea level)'.format(
-                time.strftime(timestamp_format),
-                sensor.read_altitude(),
-                sensor.read_temperature(),
-                sensor.read_pressure(),
-                sensor.read_sealevel_pressure()
-            ),
-            file=temp_pressure_file
-        )
-        time.sleep(poll_interval_seconds)
+    print('temperature_pressure is going')
+    with open(output_file, 'w') as temp_pressure_file:
+        while True:
+            print(
+                '{}: {0:0.2f} m, {0:0.2f} *C, {0:0.2f} Pa, {0:0.2f} Pa (sea level)'.format(
+                    time.strftime(timestamp_format),
+                    sensor.read_altitude(),
+                    sensor.read_temperature(),
+                    sensor.read_pressure(),
+                    sensor.read_sealevel_pressure()
+                ),
+                file=temp_pressure_file
+            )
+            time.sleep(poll_interval_seconds)

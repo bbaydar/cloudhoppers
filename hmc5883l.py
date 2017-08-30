@@ -8,7 +8,6 @@
 
 import smbus
 import math
-import time
 import sys
 
 class hmc5883l:
@@ -89,14 +88,3 @@ class hmc5883l:
                "Axis Z: " + str(z) + "\n" \
                "Declination: " + self.degrees(self.declination()) + "\n" \
                "Heading: " + self.degrees(self.heading()) + "\n"
-
-def go(gauss, declination, output_file, poll_interval_seconds, timestamp_format):
-    # http://magnetic-declination.com/Great%20Britain%20(UK)/Harrogate#
-    compass = hmc5883l(gauss = 4.7, declination = (-2,5))
-    compass_file = open('/var/log/spaceteam/compass-log', 'w')
-
-    while True:
-        #sys.stdout.write("\rHeading: " + str(compass.degrees(compass.heading())) + "     ")
-        #sys.stdout.flush()
-        compass_file.write(time.strftime("%c") + str(compass.degrees(compass.heading())) + "\n")
-	time.sleep(10)
